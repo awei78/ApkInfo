@@ -115,39 +115,60 @@ namespace ApkInfo
                 aaptPath = sb.ToString();
 
             var startInfo = new ProcessStartInfo("cmd.exe");
-            string dumpFile = Path.GetTempFileName();
-            //如此费事做中转，只为处理中文乱码
-            string args = string.Format("/k {0} dump badging \"{1}\" > \"{2}\" &exit", aaptPath, this.apkPath, dumpFile);
-            startInfo.Arguments = args;
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            this.infos.Clear();
-            using (var process = Process.Start(startInfo))
+            try
             {
-                process.WaitForExit(2000);
-            }
-            if (File.Exists(dumpFile))
-            {
-                //解析
-                using (var sr = new StreamReader(dumpFile, Encoding.UTF8))
+                string dumpFile = Path.GetTempFileName();
+                //如此费事做中转，只为处理中文乱码
+                string args = string.Format("/k {0} dump badging \"{1}\" > \"{2}\" &exit", aaptPath, this.apkPath, dumpFile);
+                startInfo.Arguments = args;
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                this.infos.Clear();
+                using (var process = Process.Start(startInfo))
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        this.infos.Add(line);
-                    }
-                    ParseInfo();
                 }
-                try
+                if (File.Exists(dumpFile))
                 {
+                    //解析
+                    using (var sr = new StreamReader(dumpFile, Encoding.UTF8))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            this.infos.Add(line);
+                        }
+                        ParseInfo();
+                    }
+
                     File.Delete(dumpFile);
                 }
-                catch
+            }
+            catch
+            {
+                //出了异常，换回命令行解析方式
+                aaptPath = Path.Combine(this.appPath, @"tools\aapt.exe");
+                if (!File.Exists(aaptPath))
+                    aaptPath = Path.Combine(this.appPath, @"aapt.exe");
+                startInfo = new ProcessStartInfo(aaptPath);
+                string args = string.Format("dump badging \"{0}\"", this.apkPath);
+                startInfo.Arguments = args;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.CreateNoWindow = true;
+                using (var process = Process.Start(startInfo))
                 {
+                    var sr = process.StandardOutput;
+                    while (!sr.EndOfStream)
+                    {
+                        infos.Add(sr.ReadLine());
+                    }
+                    process.WaitForExit();
+                    //解析
+                    ParseInfo(sr.CurrentEncoding);
                 }
             }
         }
 
-        private void ParseInfo()
+        private void ParseInfo(Encoding currentEncoding = null)
         {
             if (this.infos.Count == 0)
             {
@@ -166,7 +187,7 @@ namespace ApkInfo
                 hander(this);
         }
 
-        private void DoParseInfo()
+        private void DoParseInfo(Encoding currentEncoding = null)
         {
             //解析每个字串
             foreach (var info in this.infos)
@@ -178,6 +199,8 @@ namespace ApkInfo
                 if (info.IndexOf("application:") == 0)
                 {
                     this.AppName = GetKeyValue(info, "label=");
+                    if (currentEncoding != null)
+                        this.AppName = Encoding.UTF8.GetString(currentEncoding.GetBytes(this.AppName));
                     this.IconPath = GetKeyValue(info, "icon=");
                     GetAppIcon(this.IconPath);
                 }
