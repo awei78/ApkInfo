@@ -31,7 +31,7 @@
             this.imgIcon = new System.Windows.Forms.PictureBox();
             this.btnClose = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.lblVersion = new System.Windows.Forms.Label();
+            this.lblHomepage = new System.Windows.Forms.Label();
             this.lblAuthor = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).BeginInit();
             this.SuspendLayout();
@@ -68,23 +68,23 @@
             this.lblTitle.TabIndex = 17;
             this.lblTitle.Text = "Apk信息查看器";
             // 
-            // lblVersion
+            // lblHomepage
             // 
-            this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(90, 34);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(59, 12);
-            this.lblVersion.TabIndex = 18;
-            this.lblVersion.Text = "版本：{0}";
+            this.lblHomepage.AutoSize = true;
+            this.lblHomepage.Location = new System.Drawing.Point(90, 52);
+            this.lblHomepage.Name = "lblHomepage";
+            this.lblHomepage.Size = new System.Drawing.Size(173, 12);
+            this.lblHomepage.TabIndex = 18;
+            this.lblHomepage.Text = "主页：http://www.cr-soft.net";
             // 
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Location = new System.Drawing.Point(90, 52);
+            this.lblAuthor.Location = new System.Drawing.Point(90, 34);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(137, 12);
             this.lblAuthor.TabIndex = 19;
-            this.lblAuthor.Text = "作者：刘景威(楚人无衣)";
+            this.lblAuthor.Text = "作者：楚人无衣(刘景威)";
             // 
             // AboutForm
             // 
@@ -93,7 +93,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(294, 117);
             this.Controls.Add(this.lblAuthor);
-            this.Controls.Add(this.lblVersion);
+            this.Controls.Add(this.lblHomepage);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.imgIcon);
@@ -117,7 +117,7 @@
         private System.Windows.Forms.PictureBox imgIcon;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.Label lblHomepage;
         private System.Windows.Forms.Label lblAuthor;
     }
 }

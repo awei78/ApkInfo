@@ -16,9 +16,7 @@ namespace ApkInfo
         public AboutForm()
         {
             InitializeComponent();
-
-            lblVersion.Text = string.Format(lblVersion.Text, Application.ProductVersion);
-            //imgIcon.Image = Icon.ExtractAssociatedIcon(Application.ExecutablePath).ToBitmap();
+            lblTitle.Text += " v" + Application.ProductVersion;
         }
 
         private void AboutForm_KeyDown(object sender, KeyEventArgs e)
